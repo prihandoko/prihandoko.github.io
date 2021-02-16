@@ -14,4 +14,15 @@ group :jekyll_plugins do
   gem "jemoji"
   gem "jekyll-include-cache"
   gem "jekyll-algolia"
+  gem "jekyll-seo-tag"
 end
+
+
+# search
+
+# search_provider: algolia
+# algolia:
+#   application_id: L3N3C5VSUX
+#   index_name: # YOUR_INDEX_NAME
+#   search_only_api_key: # YOUR_SEARCH_ONLY_API_KEY
+#   powered_by: true
