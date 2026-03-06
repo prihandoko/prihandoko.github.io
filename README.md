@@ -102,4 +102,65 @@ Use standard KaTeX delimiters:
 
 ---
 
-Made with plain HTML/CSS/JS · No build step required
+
+## Theme Changes 
+
+This tempalte made with plain HTML/CSS/JS · No build step required
+
+### Links, header, footer
+Only one file: **`layout.js`**
+
+Everything shared across all pages lives there. Here's the map:
+
+---
+
+**Site identity**
+```js
+const SITE = {
+  name:    'Not a Note',      // ← site title in nav
+  author:  'Rudi Prihandoko', // ← footer copyright name
+  year:    2025,              // ← footer year
+  baseUrl: 'https://rud72k.github.io', // ← used in RSS
+}
+```
+
+**Nav links** — add, remove, or reorder pages
+```js
+nav: [
+  { href: 'writing.html', label: 'Writing' },
+  { href: 'about.html',   label: 'About'   },
+  { href: 'feed.xml',     label: '', icon: 'fa-solid fa-rss', title: 'RSS' },
+]
+```
+
+**Footer social links**
+```js
+social: [
+  { href: 'https://instagram.com/...', icon: 'fa-brands fa-instagram', title: 'Instagram' },
+  ...
+]
+```
+
+**Shared CSS** — colors, fonts, nav style, footer style, FAB button
+```js
+const SHARED_CSS = `
+  :root, [data-theme="light"] { --bg: #ffffff; ... }
+  [data-theme="dark"]         { --bg: #101010; ... }
+  .nan-header { ... }
+  .nan-footer { ... }
+  .nan-fab    { ... }
+`
+```
+
+---
+### The template structure 
+
+You may want to change the templates, you don't need to touch the file `layout.js`. Here is the files that need to be change. 
+
+| Change | File to edit instead |
+|---|---|
+| Post reading layout, typography | `post.html` |
+| Feed card design | `index.html` |
+| Writing list design | `writing.html` |
+| About page content | `about.html` |
+| Adding a new page | `page-template.html` → new file, then add to `nav` in `layout.js` |
