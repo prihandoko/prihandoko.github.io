@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Name — Writer & Artist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f5f1eb;
+      --ink: #1a1714;
+      --dust: #9e9690;
+      --accent: #c4a882;
+      --rule: #ddd8d0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes riseUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.6rem 3rem;
+      z-index: 100;
+      background: linear-gradient(to bottom, var(--cream) 60%, transparent);
+    }
+
+    .nav-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dust);
+      opacity: 0;
+      animation: fadeIn 1s 0.4s forwards;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      opacity: 0;
+      animation: fadeIn 1s 0.7s forwards;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--dust);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      padding: 0 3rem 5rem;
+    }
+
+    .hero-text {
+      opacity: 0;
+      animation: riseUp 1.2s 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-title {
+      font-size: clamp(3.2rem, 6.5vw, 5.8rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    .hero-title em { font-style: italic; color: var(--dust); }
+
+    .hero-desc {
+      padding-left: 4rem;
+      opacity: 0;
+      animation: riseUp 1.2s 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero-desc p {
+      font-size: 1.15rem;
+      color: var(--dust);
+      max-width: 34ch;
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--ink);
+      padding-bottom: 0.2rem;
+      transition: color 0.25s, border-color 0.25s;
+    }
+    .cta-link:hover { color: var(--accent); border-color: var(--accent); }
+    .cta-link::after { content: '→'; transition: transform 0.25s; display: inline-block; }
+    .cta-link:hover::after { transform: translateX(4px); }
+
+    .rule { border: none; border-top: 1px solid var(--rule); margin: 0 3rem; }
+
+    .section { padding: 5rem 3rem; }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .section-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--rule);
+      letter-spacing: 0.1em;
+    }
+
+    .posts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--rule);
+    }
+
+    .post-card {
+      padding: 2.5rem 2rem 2.5rem 0;
+      border-right: 1px solid var(--rule);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .post-card:last-child { border-right: none; }
+    .post-card:nth-child(n+2) { padding-left: 2rem; }
+    .post-card:hover { background: rgba(196,168,130,0.04); }
+
+    .post-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .post-title {
+      font-size: 1.45rem;
+      font-weight: 300;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.9rem;
+      transition: color 0.2s;
+    }
+    .post-card:hover .post-title { color: var(--accent); }
+
+    .post-excerpt {
+      font-size: 0.95rem;
+      color: var(--dust);
+      line-height: 1.75;
+      margin-bottom: 1.8rem;
+    }
+
+    .post-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--rule);
+      display: flex;
+      gap: 1.2rem;
+    }
+
+    .featured {
+      padding: 5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+      align-items: start;
+      border-top: 1px solid var(--rule);
+    }
+
+    .featured-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding-top: 0.4rem;
+    }
+
+    .featured-issue {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--dust);
+      margin-bottom: 1.2rem;
+    }
+
+    .featured-title {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .featured-title em { font-style: italic; color: var(--dust); }
+
+    .featured-body {
+      font-size: 1.1rem;
+      color: var(--dust);
+      line-height: 1.9;
+      max-width: 58ch;
+      margin-bottom: 2.5rem;
+      border-left: 2px solid var(--rule);
+      padding-left: 1.5rem;
+    }
+
+    .about {
+      padding: 5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .about-title {
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 300;
+      line-height: 1.2;
+    }
+    .about-title em { font-style: italic; color: var(--dust); }
+
+    .about-text p {
+      font-size: 1.05rem;
+      color: var(--dust);
+      line-height: 1.9;
+      margin-bottom: 1.2rem;
+    }
+
+    .newsletter {
+      padding: 5rem 3rem;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .newsletter-text h2 {
+      font-size: 1.6rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .newsletter-text p { font-size: 0.95rem; color: var(--dust); }
+
+    .newsletter-form { display: flex; flex-shrink: 0; }
+
+    .newsletter-form input {
+      padding: 0.85rem 1.2rem;
+      border: 1px solid var(--rule);
+      border-right: none;
+      background: transparent;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      outline: none;
+      width: 240px;
+      transition: border-color 0.25s;
+    }
+    .newsletter-form input::placeholder { color: var(--dust); }
+    .newsletter-form input:focus { border-color: var(--accent); }
+
+    .newsletter-form button {
+      padding: 0.85rem 1.4rem;
+      background: var(--ink);
+      color: var(--cream);
+      border: 1px solid var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s;
+    }
+    .newsletter-form button:hover { background: var(--accent); border-color: var(--accent); }
+
+    footer {
+      padding: 2.5rem 3rem;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--rule);
+    }
+
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dust);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--ink); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .hero { grid-template-columns: 1fr; padding: 8rem 1.5rem 4rem; }
+      .hero-desc { padding-left: 0; padding-top: 2rem; }
+      .section, .featured, .about, .newsletter, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .rule { margin: 0 1.5rem; }
+      .posts { grid-template-columns: 1fr; }
+      .post-card { border-right: none; border-bottom: 1px solid var(--rule); padding: 2rem 0; }
+      .post-card:nth-child(n+2) { padding-left: 0; }
+      .featured { grid-template-columns: 1fr; gap: 1.5rem; }
+      .about { grid-template-columns: 1fr; gap: 2rem; }
+      .newsletter { flex-direction: column; align-items: flex-start; }
+      .newsletter-form input { width: 180px; }
+      footer { flex-direction: column; gap: 1rem; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-name">Your Name</span>
+    <ul class="nav-links">
+      <li><a href="#writing">Writing</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#newsletter">Subscribe</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Essays · Stories · Ideas</p>
+      <h1 class="hero-title">
+        Words<br/>
+        that <em>linger</em><br/>
+        long after.
+      </h1>
+    </div>
+    <div class="hero-desc">
+      <p>A space for long-form essays and the kind of writing that takes its time. No algorithm. No noise.</p>
+      <a href="#writing" class="cta-link">Read the latest</a>
+    </div>
+  </section>
+
+  <hr class="rule"/>
+
+  <section class="section" id="writing">
+    <div class="section-header">
+      <span class="section-label">Recent Writing</span>
+      <span class="section-count">03 pieces</span>
+    </div>
+    <div class="posts">
+      <div class="post-card">
+        <p class="post-tag">Essay</p>
+        <h2 class="post-title">On the silence between sentences</h2>
+        <p class="post-excerpt">What we choose not to say carries its own grammar — a punctuation of restraint that shapes meaning more than the words around it.</p>
+        <div class="post-meta"><span>Mar 2026</span><span>8 min read</span></div>
+      </div>
+      <div class="post-card">
+        <p class="post-tag">Personal</p>
+        <h2 class="post-title">The city I keep returning to in dreams</h2>
+        <p class="post-excerpt">It doesn't exist on any map, but I know its alleyways. A meditation on memory, longing, and the places we build inside ourselves.</p>
+        <div class="post-meta"><span>Feb 2026</span><span>6 min read</span></div>
+      </div>
+      <div class="post-card">
+        <p class="post-tag">Reflection</p>
+        <h2 class="post-title">Why I stopped trying to have opinions</h2>
+        <p class="post-excerpt">Hot takes feel like a kind of poverty. I've been practicing something slower — a willingness to sit with a question before answering it.</p>
+        <div class="post-meta"><span>Jan 2026</span><span>5 min read</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured">
+    <span class="featured-label">Featured</span>
+    <div class="featured-content">
+      <p class="featured-issue">Long Read — Winter 2025</p>
+      <h2 class="featured-title">The art of <em>paying attention</em><br/>in a distracted age</h2>
+      <p class="featured-body">
+        There is a kind of looking that doesn't leave a mark on the thing observed. It's passive, consumptive, scrolling. Then there's the other kind — where you bring something of yourself to the encounter and come away changed.
+      </p>
+      <a href="#" class="cta-link">Read the full essay</a>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div>
+      <h2 class="about-title">A writer<br/>looking <em>closely</em><br/>at ordinary things.</h2>
+    </div>
+    <div class="about-text">
+      <p>I write about attention, memory, art, and the small frictions of being alive. My work has appeared in [Publication], [Publication], and [Publication].</p>
+      <p>I live somewhere with good light and too many books. I believe in long walks, longer sentences, and the essay as a form of thinking out loud.</p>
+      <p>This newsletter goes out when something is ready — not on a schedule, but with intention.</p>
+    </div>
+  </section>
+
+  <section class="newsletter" id="newsletter">
+    <div class="newsletter-text">
+      <h2>Join the reader's circle.</h2>
+      <p>New essays, when they're ready. No filler.</p>
+    </div>
+    <div class="newsletter-form">
+      <input type="email" placeholder="your@email.com" />
+      <button type="button">Subscribe</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Your Name. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">Twitter</a></li>
+      <li><a href="#">RSS</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>

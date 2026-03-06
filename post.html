@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Post — Not a Note</title>
+  <!-- layout.js loads fonts, FA, shared CSS, header, footer, theme toggle -->
+  <script src="layout.js"></script>
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css"/>
+  <!-- Highlight.js -->
+  <link rel="stylesheet" id="hljs-light" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"/>
+  <link rel="stylesheet" id="hljs-dark"  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" disabled/>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <!-- Marked.js for Markdown support -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+  <style>
+    :root { --max-w: 680px; }
+
+    /* Extra post-specific theme vars */
+    :root, [data-theme="light"] {
+      --code-bg: #f6f8fa; --quote-accent: #d0d0d0;
+      --body-muted: #555555; --code-color: #c0392b;
+      --progress-color: #242424; --related-hover: #f9f9f9;
+      --copy-btn-bg: #f2f2f2; --copy-btn-hover: #e0e0e0;
+    }
+    [data-theme="dark"] {
+      --code-bg: #161b22; --quote-accent: #3a3a3a;
+      --body-muted: #aaaaaa; --code-color: #ff6b6b;
+      --progress-color: #f0f0f0; --related-hover: #1a1a1a;
+      --copy-btn-bg: #2a2a2a; --copy-btn-hover: #333333;
+    }
+
+    /* PROGRESS BAR */
+    #progress { position: fixed; top: 0; left: 0; height: 2px; width: 0%; background: var(--progress-color); z-index: 300; transition: width 0.1s linear, background 0.25s; }
+
+    /* Override nan-header back-link style for post page */
+    .nan-nav .back-link { display: flex; align-items: center; gap: 0.4rem; }
+
+    /* ARTICLE */
+    article { max-width: var(--max-w); margin: 0 auto; padding: 3.5rem 1.5rem 4rem; animation: fadeUp 0.5s ease both; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* POST HEADER */
+    .post-header { margin-bottom: 2.5rem; }
+    .post-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .post-tag {
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.72rem;
+      background: var(--tag-bg); color: var(--muted);
+      padding: 0.2rem 0.6rem; border-radius: 20px; cursor: pointer;
+      text-decoration: none; transition: background 0.2s, color 0.2s;
+    }
+    .post-tag:hover { background: var(--border); color: var(--ink); }
+    h1.post-title { font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 500; line-height: 1.2; letter-spacing: -0.025em; margin-bottom: 1rem; }
+    .post-subtitle { font-size: 1.15rem; color: var(--muted); font-style: italic; line-height: 1.5; margin-bottom: 1.5rem; }
+    .post-byline { display: flex; align-items: center; gap: 0.75rem; padding: 1.25rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .byline-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--avatar-bg); color: var(--avatar-fg); display: flex; align-items: center; justify-content: center; font-family: 'Source Serif 4', serif; font-size: 0.8rem; transition: background 0.25s, color 0.25s; }
+    .byline-info { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .byline-name { font-size: 0.88rem; font-weight: 500; }
+    .byline-meta { font-size: 0.78rem; color: var(--muted); }
+    .byline-read-bar { margin-left: auto; display: flex; align-items: center; gap: 0.4rem; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.75rem; color: var(--muted); }
+
+    /* CONTENT */
+    .post-content { margin-top: 2.5rem; }
+    .post-content p { margin-bottom: 1.5rem; }
+    .post-content h2 { font-size: 1.5rem; font-weight: 500; letter-spacing: -0.02em; margin: 2.5rem 0 1rem; line-height: 1.3; }
+    .post-content h3 { font-size: 1.15rem; font-weight: 500; margin: 2rem 0 0.75rem; }
+    .post-content blockquote { border-left: 2px solid var(--quote-accent); margin: 2rem 0; padding: 0.25rem 1.5rem; font-style: italic; color: var(--body-muted); }
+    .post-content code { font-family: 'Fira Code', monospace; font-size: 0.82em; background: var(--code-bg); padding: 0.15em 0.4em; border-radius: 3px; color: var(--code-color); }
+    .post-content pre { margin: 1.5rem 0; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+    .post-content pre code { display: block; padding: 1.25rem 1.5rem; overflow-x: auto; font-family: 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.65; background: var(--code-bg) !important; color: inherit; border-radius: 0; }
+    .post-content hr { border: none; text-align: center; margin: 2.5rem 0; color: var(--muted); font-size: 1.2rem; letter-spacing: 0.4em; }
+    .post-content hr::after { content: '· · ·'; }
+
+    /* CODE BLOCK */
+    .code-block-wrap {}
+    .code-header { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.4rem 1rem; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.72rem; color: var(--muted); }
+    .code-lang { text-transform: uppercase; letter-spacing: 0.05em; }
+    .copy-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.7rem; background: var(--copy-btn-bg); border: none; color: var(--muted); padding: 0.2rem 0.6rem; border-radius: 4px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.3rem; }
+    .copy-btn:hover { background: var(--copy-btn-hover); color: var(--ink); }
+    .copy-btn.copied { color: #22c55e; }
+
+    /* BBCODE */
+    .bb-b { font-weight: 600; }
+    .bb-i { font-style: italic; }
+    .bb-u { text-decoration: underline; text-underline-offset: 3px; }
+    .bb-s { text-decoration: line-through; }
+    .bb-highlight { background: #fef9c3; padding: 0.05em 0.2em; border-radius: 2px; }
+    [data-theme="dark"] .bb-highlight { background: #44400a; }
+    .bb-spoiler { background: var(--ink); color: var(--ink); border-radius: 3px; cursor: pointer; padding: 0 0.3em; transition: color 0.2s; user-select: none; }
+    .bb-spoiler:hover, .bb-spoiler.revealed { color: var(--bg); }
+    .bb-quote-block { border-left: 2px solid var(--quote-accent); margin: 1.5rem 0; padding: 0.25rem 1.5rem; font-style: italic; color: var(--body-muted); }
+    .bb-quote-author { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; color: var(--muted); font-style: normal; margin-bottom: 0.25rem; }
+    .bb-list { margin: 1rem 0 1rem 1.5rem; }
+    .bb-list li { margin-bottom: 0.3rem; }
+    .bb-center { text-align: center; }
+    .bb-right  { text-align: right; }
+
+    /* IMAGE */
+    .bb-img-wrap { margin: 2rem 0; }
+    .bb-img-wrap img { max-width: 100%; border-radius: 8px; display: block; border: 1px solid var(--border); }
+    .bb-img-caption { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; color: var(--muted); margin-top: 0.5rem; text-align: center; font-style: italic; }
+
+    /* SOCIAL EMBEDS */
+    .embed-wrap { margin: 2rem auto; max-width: 550px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+    .embed-wrap iframe { display: block; width: 100%; border: none; }
+    .embed-wrap blockquote { margin: 0 !important; }
+
+    /* SHARE BAR */
+    .share-bar { display: flex; align-items: center; gap: 0.5rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-family: 'Plus Jakarta Sans', sans-serif; }
+    .share-label { font-size: 0.78rem; color: var(--muted); margin-right: 0.25rem; }
+    .share-btn { display: flex; align-items: center; gap: 0.35rem; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; padding: 0.35rem 0.8rem; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; text-decoration: none; transition: all 0.2s; }
+    .share-btn:hover { border-color: var(--ink); color: var(--ink); }
+    .share-btn.copied { color: #22c55e; border-color: #22c55e; }
+
+    /* POST FOOTER */
+    .post-footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; color: var(--muted); display: flex; justify-content: space-between; align-items: center; }
+    .footer-back { color: var(--ink); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.4rem; }
+    .footer-back:hover { opacity: 0.7; }
+
+    /* RELATED POSTS */
+    .related-section { max-width: var(--max-w); margin: 0 auto; padding: 0 1.5rem 4rem; animation: fadeUp 0.5s 0.1s ease both; }
+    .related-heading { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .related-list { display: flex; flex-direction: column; }
+    .related-item { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; font-family: 'Plus Jakarta Sans', sans-serif; transition: background 0.15s; }
+    .related-item:hover { background: var(--related-hover); margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+    .related-title { font-family: 'Source Serif 4', serif; font-size: 0.95rem; font-weight: 400; }
+    .related-date { font-size: 0.75rem; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+
+    /* KaTeX */
+    .katex-display { margin: 1.5rem 0; overflow-x: auto; }
+
+    /* Back-to-top FAB sits above the theme FAB from layout.js */
+    #backToTop { opacity: 0; pointer-events: none; transition: opacity 0.3s, all 0.25s; }
+    #backToTop.visible { opacity: 1; pointer-events: auto; }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<article>
+  <div class="post-header">
+    <div class="post-tags" id="post-tags"></div>
+    <h1 class="post-title" id="post-title">Loading…</h1>
+    <p class="post-subtitle" id="post-subtitle"></p>
+    <div class="post-byline">
+      <div class="byline-avatar" id="byline-avatar">R</div>
+      <div class="byline-info">
+        <div class="byline-name" id="byline-name">Rudi Prihandoko</div>
+        <div class="byline-meta" id="byline-meta"></div>
+      </div>
+      <div class="byline-read-bar" id="byline-read-bar"></div>
+    </div>
+  </div>
+
+  <div class="post-content" id="post-content"></div>
+
+  <div class="post-footer">
+    <a class="footer-back" href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to all posts</a>
+    <span id="footer-date"></span>
+  </div>
+
+  <div class="share-bar" id="share-bar">
+    <span class="share-label">Share</span>
+    <button class="share-btn" id="shareCopy" onclick="shareLink()"><i class="fa-regular fa-copy"></i> Copy link</button>
+    <a class="share-btn" id="shareX" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter"></i> X</a>
+    <a class="share-btn" id="shareWhatsApp" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+  </div>
+</article>
+
+<section class="related-section" id="related-section" style="display:none">
+  <div class="related-heading">More posts</div>
+  <div class="related-list" id="related-list"></div>
+</section>
+
+<script>
+// ── SYNC HIGHLIGHT.JS THEME WITH SITE THEME ───────────────────────────────────
+function syncHljsTheme(t) {
+  document.getElementById('hljs-light').disabled = (t === 'dark');
+  document.getElementById('hljs-dark').disabled  = (t !== 'dark');
+}
+// Sync on initial load — layout.js already set data-theme before this runs
+document.addEventListener('DOMContentLoaded', () => {
+  syncHljsTheme(document.documentElement.getAttribute('data-theme') || 'light');
+});
+// Sync whenever user toggles
+document.addEventListener('nan-theme-change', e => syncHljsTheme(e.detail));
+
+// ── PROGRESS BAR ──────────────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const d = document.documentElement;
+  document.getElementById('progress').style.width =
+    (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+}, { passive: true });
+
+// ── BACK TO TOP (injected into layout's FAB stack after DOM ready) ────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Wait a tick for layout.js DOMContentLoaded to also fire and build the FAB stack
+  setTimeout(() => {
+    const stack = document.querySelector('.nan-fab-stack');
+    if (stack) {
+      const btn = document.createElement('button');
+      btn.className = 'nan-fab';
+      btn.id = 'backToTop';
+      btn.title = 'Back to top';
+      btn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+      btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      stack.insertBefore(btn, stack.firstChild);
+    }
+  }, 0);
+});
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('backToTop');
+  if (btn) btn.classList.toggle('visible', window.scrollY > 400);
+}, { passive: true });
+
+// ── CONTENT PIPELINE: Markdown → BBCode → (KaTeX runs after) ─────────────────
+//
+// Pipeline order:
+//   1. protectLatex()   — stash $...$ and $$...$$ so Markdown doesn't mangle them
+//   2. parseMarkdown()  — convert Markdown to HTML (via marked.js)
+//   3. parseBBCode()    — convert [tags] to HTML
+//   4. restoreLatex()   — put the LaTeX expressions back
+//   5. renderMathInElement() — KaTeX renders them (runs after innerHTML is set)
+//
+// You can freely mix all four syntaxes in one post.
+
+const _latexStore = [];
+
+function protectLatex(text) {
+  _latexStore.length = 0;
+  // Protect $$...$$ first (display), then $...$ (inline)
+  text = text.replace(/\$\$([\s\S]*?)\$\$/g, (_, inner) => {
+    _latexStore.push('$$' + inner + '$$');
+    return `\x00LATEX${_latexStore.length - 1}\x00`;
+  });
+  text = text.replace(/\$([^\$\n]+?)\$/g, (_, inner) => {
+    _latexStore.push('$' + inner + '$');
+    return `\x00LATEX${_latexStore.length - 1}\x00`;
+  });
+  return text;
+}
+
+function restoreLatex(text) {
+  return text.replace(/\x00LATEX(\d+)\x00/g, (_, i) => _latexStore[+i] || '');
+}
+
+function parseMarkdown(text) {
+  if (typeof marked === 'undefined') return text;
+  // Configure marked: don't mangle links, use GFM
+  marked.setOptions({ gfm: true, breaks: false });
+  return marked.parse(text);
+}
+
+// ── BBCODE PARSER ─────────────────────────────────────────────────────────────
+function parseBBCode(text) {
+  let h = text;
+  h = h.replace(/\[b\]([\s\S]*?)\[\/b\]/gi,         '<strong class="bb-b">$1</strong>');
+  h = h.replace(/\[i\]([\s\S]*?)\[\/i\]/gi,          '<em class="bb-i">$1</em>');
+  h = h.replace(/\[u\]([\s\S]*?)\[\/u\]/gi,          '<span class="bb-u">$1</span>');
+  h = h.replace(/\[s\]([\s\S]*?)\[\/s\]/gi,          '<span class="bb-s">$1</span>');
+  h = h.replace(/\[highlight\]([\s\S]*?)\[\/highlight\]/gi, '<mark class="bb-highlight">$1</mark>');
+  h = h.replace(/\[color=([^\]]+)\]([\s\S]*?)\[\/color\]/gi, '<span style="color:$1">$2</span>');
+  h = h.replace(/\[size=([^\]]+)\]([\s\S]*?)\[\/size\]/gi,   '<span style="font-size:$1em">$2</span>');
+  h = h.replace(/\[spoiler\]([\s\S]*?)\[\/spoiler\]/gi,
+    '<span class="bb-spoiler" onclick="this.classList.toggle(\'revealed\')">$1</span>');
+  h = h.replace(/\[quote=([^\]]+)\]([\s\S]*?)\[\/quote\]/gi,
+    '<blockquote class="bb-quote-block"><div class="bb-quote-author">$1</div>$2</blockquote>');
+  h = h.replace(/\[quote\]([\s\S]*?)\[\/quote\]/gi,
+    '<blockquote class="bb-quote-block">$1</blockquote>');
+  h = h.replace(/\[center\]([\s\S]*?)\[\/center\]/gi, '<div class="bb-center">$1</div>');
+  h = h.replace(/\[right\]([\s\S]*?)\[\/right\]/gi,   '<div class="bb-right">$1</div>');
+  h = h.replace(/\[list\]([\s\S]*?)\[\/list\]/gi, (_, inner) =>
+    `<ul class="bb-list">${inner.replace(/\[\*\]([\s\S]*?)(?=\[\*\]|$)/g, '<li>$1</li>')}</ul>`);
+  h = h.replace(/\[list=1\]([\s\S]*?)\[\/list\]/gi, (_, inner) =>
+    `<ol class="bb-list">${inner.replace(/\[\*\]([\s\S]*?)(?=\[\*\]|$)/g, '<li>$1</li>')}</ol>`);
+  h = h.replace(/\[code=([^\]]+)\]([\s\S]*?)\[\/code\]/gi, (_, lang, code) => buildCodeBlock(code.trim(), lang.trim()));
+  h = h.replace(/\[code\]([\s\S]*?)\[\/code\]/gi,          (_, code)       => buildCodeBlock(code.trim(), ''));
+  h = h.replace(/\[inline\]([\s\S]*?)\[\/inline\]/gi, '<code>$1</code>');
+  h = h.replace(/\[url=([^\]]+)\]([\s\S]*?)\[\/url\]/gi, '<a href="$1" target="_blank" rel="noopener">$2</a>');
+  h = h.replace(/\[url\]([\s\S]*?)\[\/url\]/gi,           '<a href="$1" target="_blank" rel="noopener">$1</a>');
+  h = h.replace(/\[img=([^\]]*)\]([\s\S]*?)\[\/img\]/gi, (_, caption, url) =>
+    `<div class="bb-img-wrap"><img src="${url.trim()}" alt="${caption}" loading="lazy"/>${caption ? `<div class="bb-img-caption">${caption}</div>` : ''}</div>`);
+  h = h.replace(/\[img\]([\s\S]*?)\[\/img\]/gi, (_, url) =>
+    `<div class="bb-img-wrap"><img src="${url.trim()}" alt="" loading="lazy"/></div>`);
+  h = h.replace(/\[tweet\]([\s\S]*?)\[\/tweet\]/gi, (_, url) =>
+    `<div class="embed-wrap embed-tweet"><blockquote class="twitter-tweet" data-dnt="true"><a href="${url.trim()}"></a></blockquote></div>`);
+  h = h.replace(/\[instagram\]([\s\S]*?)\[\/instagram\]/gi, (_, url) => {
+    url = url.trim().replace(/\/?$/, '/');
+    return `<div class="embed-wrap embed-ig"><blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14" style="margin:0 auto;max-width:540px;"></blockquote></div>`;
+  });
+  h = h.replace(/\[threads\]([\s\S]*?)\[\/threads\]/gi, (_, url) => {
+    url = url.trim().replace(/\/?$/, '/');
+    return `<div class="embed-wrap embed-threads"><blockquote class="text-post-media" data-url="${url}" style="margin:0 auto;max-width:540px;"></blockquote></div>`;
+  });
+  return h;
+}
+
+function buildCodeBlock(code, lang) {
+  const id = 'cb-' + Math.random().toString(36).slice(2, 8);
+  const escaped = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return `<div class="code-block-wrap">
+    <div class="code-header">
+      <span class="code-lang">${lang || 'code'}</span>
+      <button class="copy-btn" onclick="copyCode('${id}', this)"><i class="fa-regular fa-copy"></i> Copy</button>
+    </div>
+    <pre><code id="${id}"${lang ? ` class="language-${lang}"` : ''}>${escaped}</code></pre>
+  </div>`;
+}
+
+function copyCode(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).innerText).then(() => {
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ── SHARE ─────────────────────────────────────────────────────────────────────
+function shareLink() {
+  const btn = document.getElementById('shareCopy');
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copy link'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function initShareBar(title) {
+  const url  = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent(title + ' — Not a Note');
+  document.getElementById('shareX').href = `https://x.com/intent/tweet?url=${url}&text=${text}`;
+  document.getElementById('shareWhatsApp').href = `https://wa.me/?text=${text}%20${url}`;
+}
+
+// ── SOCIAL EMBEDS ─────────────────────────────────────────────────────────────
+function loadSocialEmbeds(contentEl) {
+  if (contentEl.querySelector('.twitter-tweet') && !document.getElementById('twitter-widget')) {
+    const s = document.createElement('script');
+    s.id = 'twitter-widget'; s.src = 'https://platform.twitter.com/widgets.js';
+    s.async = true; s.charset = 'utf-8';
+    document.body.appendChild(s);
+  }
+  const needsIG = contentEl.querySelector('.instagram-media, .text-post-media');
+  if (needsIG && !document.getElementById('ig-embed')) {
+    const s = document.createElement('script');
+    s.id = 'ig-embed'; s.src = 'https://www.instagram.com/embed.js'; s.async = true;
+    s.onload = () => { if (window.instgrm) window.instgrm.Embeds.process(); };
+    document.body.appendChild(s);
+  } else if (needsIG && window.instgrm) {
+    window.instgrm.Embeds.process();
+  }
+}
+
+// ── READ TIME ─────────────────────────────────────────────────────────────────
+function calcReadTime(html) {
+  return Math.max(1, Math.round(html.replace(/<[^>]+>/g, ' ').trim().split(/\s+/).length / 238));
+}
+
+// ── RELATED POSTS ─────────────────────────────────────────────────────────────
+function renderRelated(allPosts, currentId, currentTags) {
+  const scored = allPosts
+    .filter(p => p.id !== currentId)
+    .map(p => ({ ...p, score: (p.tags||[]).filter(t => (currentTags||[]).includes(t)).length }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+  if (!scored.length) return;
+  document.getElementById('related-section').style.display = 'block';
+  document.getElementById('related-list').innerHTML = scored.map(p =>
+    `<a class="related-item" href="post.html?id=${p.id}">
+      <span class="related-title">${p.title}</span>
+      <span class="related-date">${p.date}</span>
+    </a>`).join('');
+}
+
+// ── RENDER POST ───────────────────────────────────────────────────────────────
+function renderPost(post) {
+  document.title = post.title + ' — Not a Note';
+  document.getElementById('post-title').textContent    = post.title;
+  document.getElementById('post-subtitle').textContent = post.subtitle || '';
+  document.getElementById('byline-name').textContent   = post.author;
+  document.getElementById('byline-avatar').textContent = post.authorInitial;
+  document.getElementById('footer-date').textContent   = post.date;
+
+  // Full pipeline: protect LaTeX → Markdown → BBCode → restore LaTeX
+  const protected_  = protectLatex(post.content.trim());
+  const afterMd     = parseMarkdown(protected_);
+  const afterBBCode = parseBBCode(afterMd);
+  const parsed      = restoreLatex(afterBBCode);
+
+  const mins = calcReadTime(parsed);
+  document.getElementById('byline-meta').textContent   = `${post.date} · ${mins} min read`;
+  document.getElementById('byline-read-bar').innerHTML = `<i class="fa-regular fa-clock"></i> ${mins} min`;
+  document.getElementById('post-tags').innerHTML =
+    (post.tags||[]).map(t => `<a class="post-tag" href="index.html?tag=${encodeURIComponent(t)}">${t}</a>`).join('');
+
+  const contentEl = document.getElementById('post-content');
+  contentEl.innerHTML = parsed;
+  contentEl.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
+  loadSocialEmbeds(contentEl);
+  initShareBar(post.title);
+
+  if (typeof renderMathInElement !== 'undefined') {
+    renderMathInElement(contentEl, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true  },
+        { left: '$',  right: '$',  display: false },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true  }
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const id = new URLSearchParams(window.location.search).get('id') || 'on-beauty-and-mathematics';
+  Promise.all([
+    fetch(`posts/${id}.json`).then(r => { if (!r.ok) throw new Error(); return r.json(); }),
+    fetch('posts/index.json').then(r => r.ok ? r.json() : [])
+  ]).then(([post, allPosts]) => {
+    renderPost(post);
+    renderRelated(allPosts, id, post.tags);
+  }).catch(() => {
+    document.getElementById('post-title').textContent = 'Post not found';
+    document.getElementById('post-content').innerHTML =
+      `<p style="color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;">
+        Could not load this post. Make sure <code>posts/${id}.json</code> exists and you're running <code>npx serve .</code>
+      </p>`;
+  });
+});
+</script>
+</body>
+</html>

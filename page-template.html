@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Page Title — Not a Note</title>
+  <!--
+    layout.js automatically injects:
+      - Google Fonts (Source Serif 4 + Plus Jakarta Sans)
+      - Font Awesome icons
+      - Shared CSS variables (light/dark theme)
+      - Header with nav and site name
+      - Footer with social links
+      - Theme toggle button (bottom-right)
+
+    TO ADD THIS PAGE TO THE NAV:
+      Open layout.js → find the `nav` array → add:
+      { href: 'your-page.html', label: 'Your Page' }
+  -->
+  <script src="layout.js"></script>
+  <style>
+    /* ── PAGE-SPECIFIC STYLES ─────────────────────────────────────────────── */
+    :root { --max-w: 620px; }   /* adjust width if needed */
+
+    main {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem 6rem;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header h1 {
+      font-family: 'Source Serif 4', serif;
+      font-size: 1.6rem; font-weight: 400; letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .page-header p { font-size: 0.85rem; color: var(--muted); }
+
+    .page-body {
+      font-family: 'Source Serif 4', serif;
+      font-size: 1.05rem; line-height: 1.85;
+    }
+    .page-body p { margin-bottom: 1.4rem; }
+    .page-body h2 { font-size: 1.3rem; font-weight: 500; margin: 2rem 0 0.75rem; letter-spacing: -0.02em; }
+    .page-body a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--border); }
+    .page-body a:hover { text-decoration-color: var(--ink); }
+  </style>
+</head>
+<body>
+
+<!-- layout.js injects <header> here automatically -->
+
+<main>
+  <div class="page-header">
+    <h1>Page Title</h1>
+    <p>Optional subtitle or description.</p>
+  </div>
+
+  <div class="page-body">
+    <p>Your content goes here. This page automatically inherits the site header, footer, theme toggle, fonts, and CSS variables from <code>layout.js</code>.</p>
+
+    <h2>A Section</h2>
+    <p>Add as many sections as you need. No copy-pasting required.</p>
+  </div>
+</main>
+
+<!-- layout.js injects <footer> and theme toggle here automatically -->
+
+</body>
+</html>

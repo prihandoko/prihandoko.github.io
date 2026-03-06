@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Writing — Not a Note</title>
+  <script src="layout.js"></script>
+  <style>
+    :root { --max-w: 620px; }
+
+    main { max-width: var(--max-w); margin: 0 auto; padding: 3.5rem 1.5rem 6rem; animation: fadeUp 0.5s ease both; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .page-header h1 { font-family: 'Source Serif 4', serif; font-size: 1.6rem; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
+    .page-header p { font-size: 0.85rem; color: var(--muted); }
+
+    /* SEARCH */
+    .search-bar { position: relative; margin: 1rem 0 0; }
+    .search-bar i { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.8rem; pointer-events: none; }
+    .search-input {
+      width: 100%; padding: 0.6rem 1rem 0.6rem 2.25rem;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem;
+      background: var(--search-bg); color: var(--ink);
+      border: 1px solid var(--border); border-radius: 8px;
+      outline: none; transition: border-color 0.2s, background 0.25s;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--ink); }
+
+    .writing-list { list-style: none; }
+    .writing-item { opacity: 0; animation: fadeUp 0.35s ease both; }
+    .writing-item a {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+      padding: 0.95rem 0; border-bottom: 1px solid var(--border);
+      text-decoration: none; color: inherit; transition: background 0.15s;
+    }
+    .writing-item a:hover { background: var(--hover); margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+    .writing-title { font-family: 'Source Serif 4', serif; font-size: 1rem; font-weight: 400; line-height: 1.4; }
+    .writing-meta { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; white-space: nowrap; }
+    .writing-date { font-size: 0.75rem; color: var(--muted); }
+    .writing-read { font-size: 0.75rem; color: var(--muted); }
+    .writing-read::before { content: '·'; margin-right: 0.5rem; }
+    .state-msg { font-size: 0.85rem; color: var(--muted); padding: 2rem 0; }
+  </style>
+</head>
+<body>
+
+<main>
+  <div class="page-header">
+    <h1>Writing</h1>
+    <p id="post-count">All posts</p>
+    <div class="search-bar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input class="search-input" id="searchInput" type="text" placeholder="Search posts…" autocomplete="off"/>
+    </div>
+  </div>
+  <ul class="writing-list" id="writing-list">
+    <li class="state-msg">Loading…</li>
+  </ul>
+  <div class="no-results" id="noResults" style="display:none;padding:3rem 0;text-align:center;font-size:0.9rem;color:var(--muted);">No posts match your search.</div>
+</main>
+
+<script>
+  let allPosts    = [];
+  let searchQuery = '';
+
+  function calcReadTime(html) {
+    const words = html.replace(/<[^>]+>/g, ' ').trim().split(/\s+/).length;
+    return Math.max(1, Math.round(words / 238));
+  }
+
+  function renderList() {
+    const filtered = allPosts.filter(p =>
+      !searchQuery ||
+      p.title.toLowerCase().includes(searchQuery) ||
+      (p.tags || []).some(t => t.toLowerCase().includes(searchQuery))
+    );
+
+    document.getElementById('post-count').textContent =
+      filtered.length === allPosts.length
+        ? `${allPosts.length} post${allPosts.length !== 1 ? 's' : ''}`
+        : `${filtered.length} of ${allPosts.length} posts`;
+
+    document.getElementById('noResults').style.display = filtered.length === 0 ? 'block' : 'none';
+    document.getElementById('writing-list').style.display = filtered.length === 0 ? 'none' : '';
+
+    document.getElementById('writing-list').innerHTML = filtered.map((p, i) => `
+      <li class="writing-item" style="animation-delay:${i * 0.04}s">
+        <a href="post.html?id=${p.id}">
+          <span class="writing-title">${p.title}</span>
+          <span class="writing-meta">
+            <span class="writing-date">${p.date}</span>
+            <span class="writing-read" id="rt-${p.id}">—</span>
+          </span>
+        </a>
+      </li>`).join('');
+
+    filtered.forEach(p => {
+      fetch(`posts/${p.id}.json`)
+        .then(r => r.ok ? r.json() : null)
+        .then(post => {
+          if (!post) return;
+          const el = document.getElementById(`rt-${p.id}`);
+          if (el) el.textContent = `${calcReadTime(post.content || '')} min`;
+        })
+        .catch(() => {});
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    renderList();
+  });
+
+  fetch('posts/index.json')
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(posts => { allPosts = posts; renderList(); })
+    .catch(() => {
+      document.getElementById('writing-list').innerHTML = '<li class="state-msg">Could not load posts. Make sure the server is running.</li>';
+    });
+</script>
+</body>
+</html>

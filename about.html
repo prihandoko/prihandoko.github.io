@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About — Not a Note</title>
+  <script src="layout.js"></script>
+  <style>
+    :root { --max-w: 620px; }
+
+    main { max-width: var(--max-w); margin: 0 auto; padding: 3.5rem 1.5rem 6rem; animation: fadeUp 0.5s ease both; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .about-header {
+      display: flex; align-items: center; gap: 1.5rem;
+      margin-bottom: 2.5rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--border);
+    }
+    .about-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--avatar-bg); color: var(--avatar-fg);
+      font-family: 'Source Serif 4', serif; font-size: 1.8rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.25s, color 0.25s;
+    }
+    .about-name { font-family: 'Source Serif 4', serif; font-size: 1.5rem; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
+    .about-tagline { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+
+    .about-body { font-family: 'Source Serif 4', serif; font-size: 1.05rem; line-height: 1.85; }
+    .about-body p { margin-bottom: 1.4rem; }
+    .about-body p:last-child { margin-bottom: 0; }
+    .about-body a {
+      color: var(--ink); text-decoration: underline; text-underline-offset: 3px;
+      text-decoration-color: var(--border); transition: text-decoration-color 0.2s;
+    }
+    .about-body a:hover { text-decoration-color: var(--ink); }
+  </style>
+</head>
+<body>
+
+<main>
+  <div class="about-header">
+    <div class="about-avatar">R</div>
+    <div>
+      <div class="about-name">Rudi Prihandoko</div>
+      <div class="about-tagline">Writer, thinker, occasional mathematician.</div>
+    </div>
+  </div>
+
+  <div class="about-body">
+    <p>I write about the things I can't stop thinking about — mathematics, language, the texture of ideas, and what it means to pay attention. This blog is less a publication and more a notebook made public.</p>
+    <p>By day I work on things that involve words and people. By night I read widely and take notes I sometimes turn into essays. I am interested in beauty in unexpected places: a proof, a sentence, a well-placed silence.</p>
+    <p>I grew up believing that disciplines had walls. I no longer believe that. The best thinking I've encountered lives at the edges — where a philosopher borrows from physics, where a novelist thinks like a mathematician, where rigor and intuition stop arguing and start collaborating.</p>
+    <p>If something here resonates, I'd be glad to hear from you.</p>
+  </div>
+</main>
+
+</body>
+</html>

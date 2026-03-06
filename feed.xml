@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Not a Note</title>
+    <link>https://rud72k.github.io</link>
+    <description>Essays, ideas, and notes on things I find interesting — by Rudi Prihandoko.</description>
+    <language>en-us</language>
+    <managingEditor>prihandokorudi (Rudi Prihandoko)</managingEditor>
+    <atom:link href="https://rud72k.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+
+    <!-- ─────────────────────────────────────────────────────────────────────
+         HOW TO UPDATE THIS FILE
+         Add one <item> block per post. Copy the pattern below.
+         Update your GitHub Pages URL in <link> and <atom:link> above.
+         ───────────────────────────────────────────────────────────────────── -->
+
+    <item>
+      <title>On Beauty and Mathematics</title>
+      <link>https://rud72k.github.io/post.html?id=on-beauty-and-mathematics</link>
+      <guid isPermaLink="true">https://rud72k.github.io/post.html?id=on-beauty-and-mathematics</guid>
+      <pubDate>Thu, 12 Jun 2025 00:00:00 +0000</pubDate>
+      <description><![CDATA[
+        There is a peculiar kind of joy in discovering that something deeply abstract — a proof, a formula — possesses the same qualities we assign to a sunset or a piece of music.
+      ]]></description>
+      <category>math</category>
+      <category>essay</category>
+    </item>
+
+    <item>
+      <title>The Weight of Words</title>
+      <link>https://rud72k.github.io/post.html?id=the-weight-of-words</link>
+      <guid isPermaLink="true">https://rud72k.github.io/post.html?id=the-weight-of-words</guid>
+      <pubDate>Wed, 28 May 2025 00:00:00 +0000</pubDate>
+      <description><![CDATA[
+        Language is not a neutral vessel. Every word carries sediment — centuries of use, misuse, and repurposing. When we write, we inherit all of it.
+      ]]></description>
+      <category>language</category>
+      <category>craft</category>
+    </item>
+
+  </channel>
+</rss>
