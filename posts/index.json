@@ -1,26 +1,12 @@
 [
   {
-    "id": "on-beauty-and-mathematics",
-    "title": "On Beauty and Mathematics",
-    "excerpt": "There is a peculiar kind of joy in discovering that something deeply abstract \u2014 a proof, a formula \u2014 possesses the same qualities we assign to a sunset or a piece of music.",
-    "date": "June 12, 2025",
+    "id": "restarting-the-journey",
+    "title": "Restarting the Journey",
+    "excerpt": "The Internet was different back then. When I say \"back then,\" I mean of course the early 2000s. When I was young and free. Hey, opened up my old blogs and still found some guide to how to install pidgin and connect it with Yahoo Messenger.",
+    "date": "March 07, 2025",
     "tags": [
-      "math",
-      "essay"
-    ],
-    "emoji": "\u222e"
-  },
-  
-  {
-    "id": "on-beauty-and-mathematics",
-    "title": "On Beauty and Mathematics",
-    "excerpt": "There is a peculiar kind of joy in discovering that something deeply abstract \u2014 a proof, a formula \u2014 possesses the same qualities we assign to a sunset or a piece of music.",
-    "date": "June 12, 2025",
-    "tags": [
-      "math",
-      "essay"
+      "essay", "self-reflection"
     ],
     "emoji": "\u222e"
   }
-
 ]
